@@ -52,5 +52,12 @@
     "llm_provider": "openai",
     "llm_model": "gpt-4o",
     "enabled": false
+  },
+  {
+    "name": "Trendshift Daily Scrape",
+    "schedule": "30 8 * * *",
+    "type": "agent",
+    "enabled": true,
+    "job": "Run the Trendshift daily intelligence pipeline for today's date (YYYY-MM-DD), idempotently (safe to re-run).\n\nTargets:\n1) https://trendshift.io\n2) https://trendshift.io/github-trending-repositories\n\nExecution guidance:\n- Fetch both pages. If content is JS-rendered or blocked in plain HTTP fetch, use browser automation (browser-tools skill) to render and extract data.\n- Capture and preserve raw artifacts for each source page without deleting prior days.\n\nExtract structured fields where visible (best effort):\n- item/repo name\n- canonical URL\n- description\n- language/topic/category tags\n- stars, growth metrics, rank, timeframe, momentum indicators\n- source page (main or github-trending-repositories)\n- scrape timestamp (ISO-8601 UTC)\n\nWrite outputs (do not overwrite older dates):\n- data/trendshift/raw/YYYY-MM-DD/main-page.*\n- data/trendshift/raw/YYYY-MM-DD/github-trending.*\n- data/trendshift/normalized/YYYY-MM-DD.json\n\nHistory maintenance:\n- Append normalized records into data/trendshift/history.jsonl\n- Deduplicate by stable key using (date + source page + canonical item identity), so reruns do not create duplicate lines\n\nInterest profile maintenance:\n- Maintain data/trendshift/interest_profile.json\n- Update rolling preference heuristics from historical patterns (recurring topics, languages, repo archetypes, momentum signals)\n- Keep transparent fields: scores/weights, last_updated timestamp, and concise rationale notes explaining changes\n\nDaily report:\n- Write data/trendshift/reports/YYYY-MM-DD.md\n- Include sections:\n  1) Top movers today\n  2) New/emerging themes\n  3) Consistent trends across recent days\n  4) Organized for you (personalized using interest_profile.json)\n\nQuality bar:\n- Be explicit about assumptions or missing fields\n- Keep schemas consistent day-to-day\n- Ensure outputs are machine-readable and easy for later aggregation"
   }
 ]

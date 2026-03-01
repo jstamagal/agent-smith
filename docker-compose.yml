@@ -24,6 +24,8 @@ services:
   event-handler:
     container_name: thepopebot-event-handler
     image: ${EVENT_HANDLER_IMAGE_URL:-stephengpope/thepopebot:event-handler-${THEPOPEBOT_VERSION:-latest}}
+    environment:
+      - TZ=America/New_York
     volumes:
       - .:/app
       - /app/node_modules
