@@ -52,5 +52,12 @@
     "llm_provider": "openai",
     "llm_model": "gpt-4o",
     "enabled": false
+  },
+  {
+    "name": "Trendshift Daily Scrape",
+    "schedule": "*/30 * * * *",
+    "type": "command",
+    "command": "node trendshift-reporting.js --scheduled",
+    "enabled": true
   }
 ]
